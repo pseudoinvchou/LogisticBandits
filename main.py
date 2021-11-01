@@ -4,8 +4,8 @@ def elements(array):
     return array.ndim and array.size
 def sigmoid(x):
     return 1/(1+np.exp(-x))
-def generate_dataset(dim=12,max_arm=100):
-    theta_star = np.random.multivariate_normal(np.zeros(dim),3/(dim**2)*np.eye(dim))
+def generate_dataset(dim=5,max_arm=100):
+    theta_star = np.random.multivariate_normal(np.zeros(dim),3/(dim**3)*np.eye(dim))
     X = np.ones([max_arm, dim])
     for i in range(max_arm):
         xi = np.random.uniform(-1,1,dim)
@@ -18,10 +18,10 @@ def solve_MLE(X,y,lam=1):
     model = linear_model.LogisticRegression(C=lam,fit_intercept=False,solver='newton-cg')
     model.fit(X,y)
     return model.coef_
-def GLM_TSL_new(dim=12,max_arm=100,horizon=50000, noise_sigma=1,lam=1):
+def GLM_TSL_new(dim=5,max_arm=100,horizon=50000, noise_sigma=1,lam=1):
     (X,theta_star) = generate_dataset(dim, max_arm)
     p = sigmoid(X @ theta_star)
-    while(1/(np.min(p*(1-p))+0.00001) > horizon**(1/4)):
+    while(1/(np.min(p*(1-p))+0.00001) > horizon**(1/5)):
         (X, theta_star) = generate_dataset(dim, max_arm)
         p = sigmoid(X @ theta_star)
     print(f'dataset generated! kappa={1/np.min(p*(1-p)+0.00001)}')
